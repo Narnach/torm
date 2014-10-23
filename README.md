@@ -50,6 +50,17 @@ engine.decide('FSK level', country: 'FR', sexy: true)  # => {minimum: 12, maximu
   * We gather all rules, then filter irrelevant rules based on environment conditions
   * Because rules are stored in order of priority, the first rule remaining is the one that applies the best.
 
+## Versioning
+
+Torm tries to follow Semantic Versioning 2.0.0, this means that given a version number MAJOR.MINOR.PATCH, it will increment the:
+
+* MAJOR version when you make incompatible API changes,
+* MINOR version when you add functionality in a backwards-compatible manner, and
+* PATCH version when you make backwards-compatible bug fixes.
+
+As long as the MAJOR version is 0, all bets are off as the library has not been declared stable yet.
+In this case, treat MINOR version changes as a sign to check the changelog for breaking chagnes.
+
 ## Contributing
 
 1. Fork it ( https://github.com/narnach/torm/fork )
