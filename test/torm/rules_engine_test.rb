@@ -101,8 +101,8 @@ describe Torm::RulesEngine do
       end
     end
 
-    describe '#add_rules block syntax with #variation' do
-      it 'should just work' do
+    describe '#add_rules block syntax' do
+      it 'should yield an object that responds to :variation to add rules' do
         engine.add_rules 'Happy', true, :default do |rule|
           # Nobody likes rain...
           rule.variation false, :default, rain: true
@@ -111,8 +111,27 @@ describe Torm::RulesEngine do
         end
 
         assert engine.decide('Happy')
-        assert !engine.decide('Happy', rain: true)
+        refute engine.decide('Happy', rain: true)
         assert engine.decide('Happy', rain: true, country: 'GB')
+      end
+
+      it 'should yield an object that responds to :conditions to yield a block with those conditions applied' do
+        engine.add_rules 'Happy', true, :default do |rule|
+          # Setup general conditions for the entire block
+          rule.conditions rain: true do |rule|
+            # Nobody likes rain...
+            rule.variation false, :default
+            # ...except for the Brits :-)
+            rule.variation true, :law, country: 'GB'
+            # ...or people with an umbrella
+            rule.variation true, :law, umbrella: true
+          end
+        end
+
+        assert engine.decide('Happy')
+        refute engine.decide('Happy', rain: true)
+        assert engine.decide('Happy', rain: true, country: 'GB')
+        assert engine.decide('Happy', rain: true, umbrella: true)
       end
     end
   end

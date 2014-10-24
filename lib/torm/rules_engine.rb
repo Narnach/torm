@@ -47,13 +47,22 @@ module Torm
 
     # Simple helper class to add the block DSL to add_rules
     class RuleVariationHelper
-      def initialize(engine, name)
+      def initialize(engine, name, **conditions)
         @engine = engine
         @name = name
+        @conditions = conditions
       end
 
       def variation(value, policy, **conditions)
-        @engine.add_rule(@name, value, policy, conditions)
+        @engine.add_rule(@name, value, policy, @conditions.merge(conditions))
+        nil
+      end
+
+      # @yield [Torm::RulesEngine::RulesVariationHelper]
+      def conditions(**conditions)
+        engine = self.class.new(@engine, @name, conditions)
+        yield engine
+        nil
       end
     end
 
