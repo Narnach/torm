@@ -60,7 +60,7 @@ module Torm
 
       # @yield [Torm::RulesEngine::RulesVariationHelper]
       def conditions(**conditions)
-        engine = self.class.new(@engine, @name, conditions)
+        engine = self.class.new(@engine, @name, @conditions.merge(conditions))
         yield engine
         nil
       end

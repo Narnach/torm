@@ -123,8 +123,13 @@ describe Torm::RulesEngine do
             rule.variation false, :default
             # ...except for the Brits :-)
             rule.variation true, :law, country: 'GB'
-            # ...or people with an umbrella
-            rule.variation true, :law, umbrella: true
+
+            rule.conditions umbrella: true do |rule|
+              # ...or people with an umbrella
+              rule.variation true, :law
+              # Red umbrellas still make people grumpy, though.
+              rule.variation false, :law, umbrella_color: :red
+            end
           end
         end
 
@@ -132,6 +137,7 @@ describe Torm::RulesEngine do
         refute engine.decide('Happy', rain: true)
         assert engine.decide('Happy', rain: true, country: 'GB')
         assert engine.decide('Happy', rain: true, umbrella: true)
+        refute engine.decide('Happy', rain: true, umbrella: true, umbrella_color: :red)
       end
     end
   end
