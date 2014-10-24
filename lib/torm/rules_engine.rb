@@ -1,21 +1,22 @@
 module Torm
- class RulesEngine
+  class RulesEngine
     # Policies (priorities) in order of important -> least important.
     DEFAULT_POLICIES = [:law, :coc, :experiment, :default].freeze
 
-    attr_reader :rules
-    attr_accessor :verbose, :policies, :conditions_whitelist
-    attr_accessor :dirty
+    attr_reader :rules, :conditions_whitelist
+    attr_accessor :policies
+    attr_accessor :dirty, :rules_file
 
-    def initialize(rules: {}, conditions_whitelist: {}, dirty: false, policies: DEFAULT_POLICIES.dup, verbose: false)
+    def initialize(rules: {}, dirty: false, policies: DEFAULT_POLICIES.dup, rules_file: Torm.default_rules_file)
       @rules                = rules
-      @conditions_whitelist = conditions_whitelist
       @dirty                = dirty
       @policies             = policies
-      @verbose              = verbose
+      @rules_file           = rules_file
+      @conditions_whitelist = {}
     end
 
     # Have any rules been added since the last save or load?
+    # @return [true, false]
     def dirty?
       @dirty
     end
@@ -38,15 +39,20 @@ module Torm
       self
     end
 
+    # Evaluate a rule and return its result. Depending on the rule, different values are returned.
+    #
+    # @raise [RuntimeError] Raise when the rule is not defined.
     def decide(name, environment={})
       raise "Unknown rule: #{name.inspect}" unless rules.has_key?(name)
       environment          = Torm.symbolize_keys(environment)
       decision_environment = Torm.slice(environment, *conditions_whitelist_for(name))
       answer               = make_decision(name, decision_environment)
-      #Rails.logger.debug "DECISION: #{answer.inspect} (#{name.inspect} -> #{environment.inspect})"
       answer
     end
 
+    # Return a hash with all rules and policies, useful for serialisation.
+    #
+    # @return [Hash]
     def as_hash
       {
         policies: policies,
@@ -54,6 +60,9 @@ module Torm
       }
     end
 
+    # Serialise the data from +as_hash+.
+    #
+    # @return [String]
     def to_json
       MultiJson.dump(as_hash)
     end
@@ -80,26 +89,23 @@ module Torm
       engine
     end
 
-    # Where we store the rules file.
-    def self.rules_file
-      Rails.root.join('tmp', 'rules.json').to_s
-    end
-
     # Load rules from a file and create a new engine for it.
     # Note: this does *not* replace the Torm::RulesEngine.instance, you have to do this yourself if required.
     #
     # @return [Torm::RulesEngine] A new engine with the loaded rules
     def self.load(rules_file: Torm.default_rules_file)
       if File.exist?(rules_file)
-        json = File.read(rules_file)
-        self.from_json(json)
+        json              = File.read(rules_file)
+        engine            = self.from_json(json)
+        engine.rules_file = rules_file
+        engine
       else
         nil
       end
     end
 
-    # Save the current rules to a file.
-    def save(rules_file: self.class.rules_file)
+    # Save the current rules to the file.
+    def save
       Torm.atomic_save(rules_file, to_json + "\n")
       @dirty = false
       nil
@@ -107,7 +113,6 @@ module Torm
 
     private
 
-    # TODO: Refactor once useful
     def make_decision(name, environment={})
       # Fetch all rules for this decision. Duplicate to allow us to manipulate the Array with #reject!
       relevant_rules = rules_for(name).dup
@@ -174,14 +179,6 @@ module Torm
 
     def rules_for(name)
       rules[name] ||= []
-    end
-
-    def puts(message)
-      Kernel.puts(message) if verbose
-    end
-
-    def pp(object)
-      Kernel.pp(object) if verbose
     end
   end
 end
