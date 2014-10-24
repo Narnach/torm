@@ -23,6 +23,12 @@ module Torm
 
     # Add a new rule.
     # Will mark the engine as dirty when a rules was added.
+    #
+    # @param [String] name
+    # @param [true, false, String, Numeric, Range, Hash] value Either a simple type, or a Range, or a Hash with a :minimum or :maximum key to represent a Range extreme.
+    # @param [Symbol] policy The source of the rule and thus how heavy it weighs.
+    # @param [Hash] conditions Conditions that must be met before a rule evaluates to return this value.
+    #
     # @return [Torm::RulesEngine] (self) Returns the engine that rules were added to.
     def add_rule(name, value, policy, conditions={})
       raise "Illegal policy: #{policy.inspect}, must be one of: #{policies.inspect}" unless policies.include?(policy)
@@ -51,6 +57,22 @@ module Torm
       end
     end
 
+    # Add multiple rules via the block syntax:
+    #
+    # @example
+    #
+    #   engine = Torm::RulesEngine.new
+    #   engine.add_rules 'Happy', true, :default do |rule|
+    #     rule.variant false, :default, rain: true
+    #   end
+    #
+    # @param [String] name
+    # @param [true, false, String, Numeric, Range, Hash] value Either a simple type, or a Range, or a Hash with a :minimum or :maximum key to represent a Range extreme.
+    # @param [Symbol] policy The source of the rule and thus how heavy it weighs.
+    #
+    # @yield [Torm::RulesEngine::RuleVariationHelper]
+    #
+    # @return [Torm::RulesEngine] Returns self
     def add_rules(name, value, policy)
       # Add the default rule
       add_rule(name, value, policy)
