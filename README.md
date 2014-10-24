@@ -18,22 +18,31 @@ Or install it yourself as:
 
     $ gem install torm
 
-## Usage
+## Example in a (Rails) app context
+
+Load the rules engine, define defaults so new rules get saved.
 
 ```ruby
-# Setup a new engine
+# Set a custom rules file before accessing the default rules engine.
+Torm.default_rules_file = Rails.root.join('tmp/my_rules.json').to_s
+
+# Torm.set_defaults will load an engine if a rules file exists, otherwise you get an empty engine.
+# Add rules as usual, then after the block it will automatically save the rules file when new rules were changed.
+Torm.set_defaults do |engine|
+  engine.add_rule 'FSK level', 1..18, :default
+  engine.add_rule 'FSK level', { maximum: 16 }, :coc, country: 'FR'
+  engine.add_rule 'FSK level', { minimum: 12 }, :default, sexy: true
+end
+
+# Torm.instance holds the default engine used by Torm.set_defaults, so we can use it for decisions.
+Torm.instance.decide('FSK level', country: 'NL')              # => {minimum: 1, maximum: 18}
+Torm.instance.decide('FSK level', country: 'FR', sexy: true)  # => {minimum: 12, maximum: 16}
+
+
+# If you need more rules engines, instantiate a non-global engine when you need one.
 engine = Torm::RulesEngine.new
-
-# Define a bunch of rules: name, value/range, priority, conditions
-# Each rule should at least have a default value without any conditions.
-# Default priorities: :law > :coc > :experiment > :default
 engine.add_rule 'FSK level', 1..18, :default
-engine.add_rule 'FSK level', { maximum: 16 }, :coc, country: 'FR'
-engine.add_rule 'FSK level', { minimum: 12 }, :default, sexy: true
-
-# Let the engine decide which rules apply and how they intersect
-engine.decide('FSK level', country: 'NL')              # => {minimum: 1, maximum: 18}
-engine.decide('FSK level', country: 'FR', sexy: true)  # => {minimum: 12, maximum: 16}
+engine.decide('FSK level', country: 'NL')       # => {minimum: 1, maximum: 18}
 ```
 
 ## How rules are evaluated
