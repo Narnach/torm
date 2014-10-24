@@ -3,7 +3,7 @@ require 'minitest_helper'
 describe Torm::RulesEngine do
   let(:engine) { Torm::RulesEngine.new }
 
-  describe '.decide' do
+  describe '#add_rule and #decide' do
     describe 'basic decision making' do
       before(:each) do
         engine.add_rule 'show unsubscribe link', false, :default
@@ -98,6 +98,21 @@ describe Torm::RulesEngine do
 
         engine.decide('FSK level', country: 'NL').must_equal({ minimum: 1, maximum: 18 })
         engine.decide('FSK level', country: 'FR', sexy: true).must_equal({ minimum: 12, maximum: 16 })
+      end
+    end
+
+    describe '#add_rules block syntax with #variation' do
+      it 'should just work' do
+        engine.add_rules 'Happy', true, :default do |rule|
+          # Nobody likes rain...
+          rule.variation false, :default, rain: true
+          # ...except for the Brits :-)
+          rule.variation true, :law, rain: true, country: 'GB'
+        end
+
+        assert engine.decide('Happy')
+        assert !engine.decide('Happy', rain: true)
+        assert engine.decide('Happy', rain: true, country: 'GB')
       end
     end
   end

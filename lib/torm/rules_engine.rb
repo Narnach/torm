@@ -39,6 +39,28 @@ module Torm
       self
     end
 
+    # Simple helper class to add the block DSL to add_rules
+    class RuleVariationHelper
+      def initialize(engine, name)
+        @engine = engine
+        @name = name
+      end
+
+      def variation(value, policy, **conditions)
+        @engine.add_rule(@name, value, policy, conditions)
+      end
+    end
+
+    def add_rules(name, value, policy)
+      # Add the default rule
+      add_rule(name, value, policy)
+
+      rule_variation = RuleVariationHelper.new(self, name)
+      yield rule_variation if block_given?
+
+      self
+    end
+
     # Evaluate a rule and return its result. Depending on the rule, different values are returned.
     #
     # @raise [RuntimeError] Raise when the rule is not defined.

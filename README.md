@@ -27,22 +27,27 @@ Load the rules engine, define defaults so new rules get saved.
 Torm.default_rules_file = Rails.root.join('tmp/my_rules.json').to_s
 
 # Torm.set_defaults will load an engine if a rules file exists, otherwise you get an empty engine.
-# Add rules as usual, then after the block it will automatically save the rules file when new rules were changed.
+# Add rules, then after the block it will automatically save the rules file when new rules were changed.
 Torm.set_defaults do |engine|
-  engine.add_rule 'FSK level', 1..18, :default
-  engine.add_rule 'FSK level', { maximum: 16 }, :coc, country: 'FR'
-  engine.add_rule 'FSK level', { minimum: 12 }, :default, sexy: true
+  # Add a new rule named 'Happy', with a 'default' policy value of true
+  engine.add_rules 'Happy', true, :default do |rule|
+    # Add a variant on the 'Happy' rule: we're not happy when it rains
+    rule.variant false, :default, rain: true
+    # Another variant. Due to the abundance of rain, in Great Britain the law dictates you're still happy when it rains.
+    rule.variant true, :law, rain: true, country: 'GB'
+  end
 end
 
-# Torm.instance holds the default engine used by Torm.set_defaults, so we can use it for decisions.
-Torm.instance.decide('FSK level', country: 'NL')              # => {minimum: 1, maximum: 18}
-Torm.instance.decide('FSK level', country: 'FR', sexy: true)  # => {minimum: 12, maximum: 16}
+# Torm.instance holds the default engine used by Torm.set_defaults, so we can use it for making decisions.
+Torm.instance.decide('Happy', country: 'NL')                # => true
+Torm.instance.decide('Happy', country: 'NL', rain: true)    # => false
+Torm.instance.decide('Happy', country: 'GB', rain: true)    # => true
 
 
 # If you need more rules engines, instantiate a non-global engine when you need one.
 engine = Torm::RulesEngine.new
-engine.add_rule 'FSK level', 1..18, :default
-engine.decide('FSK level', country: 'NL')       # => {minimum: 1, maximum: 18}
+engine.add_rule 'Happy', true, :default
+engine.decide('Happy', country: 'NL') # => true
 ```
 
 ## How rules are evaluated
