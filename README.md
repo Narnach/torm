@@ -29,12 +29,25 @@ Torm.default_rules_file = Rails.root.join('tmp/my_rules.json').to_s
 # Torm.set_defaults will load an engine if a rules file exists, otherwise you get an empty engine.
 # Add rules, then after the block it will automatically save the rules file when new rules were changed.
 Torm.set_defaults do |engine|
-  # Add a new rule named 'Happy', with a 'default' policy value of true
+  # Setup custom priorities. Higher priority rules take precedence over lower ones.
+  engine.priorities = [:high, :medium, :low, :default]
+
+  # Add a new rule named 'Happy', with a value of true as 'default' policy
   engine.add_rules 'Happy', true, :default do |rule|
-    # Add a variant on the 'Happy' rule: we're not happy when it rains
-    rule.variant false, :default, rain: true
-    # Another variant. Due to the abundance of rain, in Great Britain the law dictates you're still happy when it rains.
-    rule.variant true, :law, rain: true, country: 'GB'
+    # Setup general conditions for the rest of the block
+    rule.conditions rain: true do |rule|
+      # By default, nobody likes rain...
+      rule.variation false, :default
+      # ...except for the Brits. They love rain :-)
+      rule.variation true, :high, country: 'GB'
+
+      rule.conditions umbrella: true do |rule|
+        # People with an umbrella don't mind rain.
+        rule.variation true, :high
+        # Red umbrellas still make people grumpy, though.
+        rule.variation false, :medium, umbrella_color: :red
+      end
+    end
   end
 end
 
