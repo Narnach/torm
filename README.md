@@ -1,5 +1,9 @@
 # Torm
 
+![CodeClimate Score]( https://codeclimate.com/repos/5450f148e30ba0588901cf3e/badges/29e37e62425a2442acb2/gpa.svg )
+![Code Coverage]( https://codeclimate.com/repos/5450f148e30ba0588901cf3e/badges/29e37e62425a2442acb2/coverage.svg )
+[![Codeship Status for Narnach/torm](https://www.codeship.io/projects/e8e50340-41a1-0132-b130-460890c716b2/status)](https://www.codeship.io/projects/44218)
+
 Torm is a rules engine build in Ruby. It is named after [Torm](http://forgottenrealms.wikia.com/wiki/Torm), the Forgotten Realms god of Law.
 
 ## Installation
