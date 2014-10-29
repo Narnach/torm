@@ -5,13 +5,15 @@ describe Torm::Tools do
   describe '#atomic_save' do
     tmp_dir  = File.expand_path(File.join(File.dirname(__FILE__), '..', '..', 'tmp'))
     tmp_file = "#{tmp_dir}/atomic.test"
+    before do
+      Dir.mkdir(tmp_dir) unless File.exist?(tmp_dir)
+    end
+
     after do
       File.delete(tmp_file) if File.exist?(tmp_file)
-      Dir.delete(tmp_dir) if File.exist?(tmp_dir)
     end
 
     it 'should save data to a file' do
-      Dir.mkdir(tmp_dir) unless File.exist?(tmp_dir)
       Torm.atomic_save(tmp_file, 'test')
       assert File.exist?(tmp_file)
       File.read(tmp_file).must_equal 'test'
