@@ -3,7 +3,7 @@ require 'minitest_helper'
 # This module is included in Torm, so we use that to test its behavior.
 describe Torm::Tools do
   describe '#atomic_save' do
-    tmp_dir  = File.join(File.dirname(__FILE__), '..', '..', 'tmp')
+    tmp_dir  = File.expand_path(File.join(File.dirname(__FILE__), '..', '..', 'tmp'))
     tmp_file = "#{tmp_dir}/atomic.test"
     after do
       File.delete(tmp_file) if File.exist?(tmp_file)
@@ -11,7 +11,7 @@ describe Torm::Tools do
     end
 
     it 'should save data to a file' do
-      Dir.mkdir(tmp_dir)
+      Dir.mkdir(tmp_dir) unless File.exist?(tmp_dir)
       Torm.atomic_save(tmp_file, 'test')
       assert File.exist?(tmp_file)
       File.read(tmp_file).must_equal 'test'
