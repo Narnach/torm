@@ -2,6 +2,10 @@
 
 ## Version 0.3.0 (dev)
 
+- Update minitest requirement from ~> 4.0 to ~> 5.12 (905e9f7)
+- Refactor: replace accessor with writer (24f4594)
+- Refactor: fixed minitest deprecation warnings (aa1c586)
+
 ## Version 0.2.1
 
 This version was in "development" between 2014 and 2021.
