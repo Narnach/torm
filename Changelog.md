@@ -6,6 +6,8 @@
 - Refactor: replace accessor with writer (24f4594)
 - Refactor: fixed minitest deprecation warnings (aa1c586)
 - Refactor: splat keyword args (ff7c160)
+- Change: Ruby 3.0 is supported (f28bcc1)
+- Fixed circular loading warning from minitest (8f4535b)
 
 ## Version 0.2.1
 
