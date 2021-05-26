@@ -19,13 +19,13 @@ Gem::Specification.new do |spec|
   spec.require_paths         = ['lib']
 
   # Ruby 2.1 introduces required named keywords
-  spec.required_ruby_version = '>= 2.1.0'
+  spec.required_ruby_version = '~> 2.1'
 
   # MultiJson follow Semantic Versioning, so any 1.x should work.
   spec.add_dependency 'multi_json', '~> 1.0'
 
   # Defaults from generating the gemspec
-  spec.add_development_dependency 'bundler', '~> 1.7'
+  spec.add_development_dependency 'bundler', '>= 1.7', '< 3.0'
   spec.add_development_dependency 'rake', '~> 12.3'
-  spec.add_development_dependency 'minitest'
+  spec.add_development_dependency 'minitest', '~> 4.0'
 end
