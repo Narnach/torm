@@ -60,7 +60,7 @@ module Torm
 
       # @yield [Torm::RulesEngine::RulesVariationHelper]
       def conditions(**conditions)
-        engine = self.class.new(@engine, @name, @conditions.merge(conditions))
+        engine = self.class.new(@engine, @name, **@conditions.merge(conditions))
         yield engine
         nil
       end
@@ -128,7 +128,7 @@ module Torm
       data   = {
         policies: dump['policies'].map(&:to_sym),
       }
-      engine = new(data)
+      engine = new(**data)
       dump['rules'].each do |name, rules|
         rules.each do |rule|
           value      = rule['value']
