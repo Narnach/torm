@@ -1,6 +1,10 @@
 # Changelog
 
-## Version 0.3.0 (dev)
+## Version next
+
+Future entries go here.
+
+## Version 0.3.0
 
 - Update minitest requirement from ~> 4.0 to ~> 5.12 (905e9f7)
 - Refactor: replace accessor with writer (24f4594)
@@ -8,6 +12,7 @@
 - Refactor: splat keyword args (ff7c160)
 - Change: Ruby 3.0 is supported (f28bcc1)
 - Fixed circular loading warning from minitest (8f4535b)
+- Version bumped to 0.3.0 (119ddf5)
 
 ## Version 0.2.1
 
