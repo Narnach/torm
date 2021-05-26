@@ -16,13 +16,13 @@ describe Torm::Tools do
     it 'should save data to a file' do
       Torm.atomic_save(tmp_file, 'test')
       assert File.exist?(tmp_file)
-      File.read(tmp_file).must_equal 'test'
+      _(File.read(tmp_file)).must_equal 'test'
     end
   end
 
   describe '#symbolize_keys' do
     it 'should convert string keys to symbols' do
-      Torm.symbolize_keys({ 'a' => 'b', :c => :d }).must_equal({ a: 'b', c: :d })
+      _(Torm.symbolize_keys({ 'a' => 'b', :c => :d })).must_equal({ a: 'b', c: :d })
     end
   end
 
@@ -32,10 +32,10 @@ describe Torm::Tools do
         foo: 1,
         baz: 3
       }
-      Torm.slice(hash, :foo, :bar).must_equal({ foo: 1 })
+      _(Torm.slice(hash, :foo, :bar)).must_equal({ foo: 1 })
 
       # Ensure we did not modify the original Hash
-      hash[:baz].must_equal 3
+      _(hash[:baz]).must_equal 3
     end
   end
 end
