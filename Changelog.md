@@ -5,6 +5,7 @@
 - Update minitest requirement from ~> 4.0 to ~> 5.12 (905e9f7)
 - Refactor: replace accessor with writer (24f4594)
 - Refactor: fixed minitest deprecation warnings (aa1c586)
+- Refactor: splat keyword args (ff7c160)
 
 ## Version 0.2.1
 
