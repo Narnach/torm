@@ -1,6 +1,12 @@
 # Changelog
 
-## Version 0.2.1 (dev)
+## Version 0.3.0 (dev)
+
+## Version 0.2.1
+
+This version was in "development" between 2014 and 2021.
+It works until Ruby 2.7 (with some keyword argument warnings).
+The next version will have stricter (read: more modern) version requirements.
 
 - Setup integration with CodeShip and CodeClimate (8121572)
 - Test improvement for CI: use an absolute file path for tmp (4b6a602)
@@ -13,6 +19,7 @@
 - Merge pull request #4 from Narnach/dependabot/add-v2-config-file (6902616)
 - Refactor: pinned version restrictions (69bc23f)
 - Updated readme (7efca80)
+- Release: version increased to 0.2.1 (c4c9421)
 
 ## Version 0.2.0
 
