@@ -1,7 +1,5 @@
 # Torm
 
-[![Codeship Status for Narnach/torm](https://www.codeship.io/projects/e8e50340-41a1-0132-b130-460890c716b2/status)](https://www.codeship.io/projects/44218)
-
 Torm is a rules engine build in Ruby. It is named after [Torm](http://forgottenrealms.wikia.com/wiki/Torm), the Forgotten Realms god of Law.
 
 ## Installation
@@ -79,6 +77,14 @@ engine.decide('Happy', country: 'NL') # => true
   * We gather all rules, then filter irrelevant rules based on environment conditions
   * Because rules are stored in order of priority, the first rule remaining is the one that applies the best.
 
+## Development / testing
+
+This project uses minitest. Local development:
+
+* Checkout the project
+* `bundle install` to install all development gems.
+* `rake test` to run the tests.
+
 ## Versioning
 
 Torm tries to follow Semantic Versioning 2.0.0, this means that given a version number MAJOR.MINOR.PATCH, it will increment the:
@@ -94,6 +100,7 @@ In this case, treat MINOR version changes as a sign to check the changelog for b
 
 1. Fork it ( https://github.com/narnach/torm/fork )
 2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Add some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
-5. Create a new Pull Request
+3. Write code. Don't forget to write tests and run all tests!
+4. Commit your changes (`git commit -am 'Add some feature'`)
+5. Push to the branch (`git push origin my-new-feature`)
+6. Create a new Pull Request
