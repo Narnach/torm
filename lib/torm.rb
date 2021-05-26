@@ -12,7 +12,7 @@ module Torm
   class << self
     include Tools
 
-    attr_accessor :instance, :default_rules_file
+    attr_writer :instance, :default_rules_file
 
     # @return [Torm::RulesEngine] Singleton RulesEngine
     def instance
